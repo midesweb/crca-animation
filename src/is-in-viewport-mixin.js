@@ -31,6 +31,7 @@ export const isInViewportMixin = (superClass) => class extends superClass {
 
   _IsInViewportHandler() {
     if(this._vanillaIsInViewport(this._viewportTarget)) {
+      console.log('entre!!');
       this.dispatchEvent(new CustomEvent('viewport-entering', {
         bubbles: true,
         composed: true,

@@ -44,31 +44,64 @@ export class CrcaAnimation extends isInViewportMixin(LitElement) {
   render() {
     return html`
       <style>
-        .animated {
-            animation-duration: ${this.duration};
-            animation-delay: ${this.delay};
-            animation-fill-mode: both;
-        }
-        @media (print), (prefers-reduced-motion: reduce) {
-          .animated {
-            animation-duration: 1ms !important;
-            transition-duration: 1ms !important;
-            animation-iteration-count: 1 !important; 
-          }
-        }
+        
       </style>
       
-      <!--<slot class="animated ${this._appear ? this.animation : ''}"></slot> -->
+      <slot id="me"></slot>
       
-      <div class="animated ${this._appear ? this.animation : ''}">
+      <!-- <div class="animated ${this._appear ? this.animation : ''}">
         <slot></slot> 
-      </div>
+      </div> -->
     `;
   }
+
+
 
   firstUpdated() {
     this.detectFirstViewportAparition(this);
     this._IsInViewportHandler();
+    this.injectarEstilos();
+    this.addEventListener('viewport-entering', () => {
+      
+    })
   }
 
+  updated(changedProperties) {
+    if(changedProperties.has('_appear')) {
+      if(this._appear) {
+        console.log('entering');
+        this.shadowRoot.getElementById('me').classList.add("animated");
+        this.shadowRoot.getElementById('me').classList.add(this.animation);
+        this.classList.add("animated");
+        this.classList.add(this.animation);
+      }
+    }
+  }
+
+  injectarEstilos() {
+    let estilos = document.createElement('style');
+    estilos.innerText = `
+    body { background-color: red; }
+      .animated {
+        animation-duration: ${this.duration};
+        animation-delay: ${this.delay};
+        animation-fill-mode: both;
+      }
+      @media (print), (prefers-reduced-motion: reduce) {
+        .animated {
+          animation-duration: 1ms !important;
+          transition-duration: 1ms !important;
+          animation-iteration-count: 1 !important; 
+        }
+      }
+    `;
+    this.append(estilos);
+    let animaciones = document.createElement('style');
+    let mycss = ''
+    animations.forEach(element => {
+      mycss += element;
+    });
+    animaciones.innerText = mycss;
+    this.append(animaciones);
+  }
 }
